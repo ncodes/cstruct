@@ -42,3 +42,4 @@ func main(){
 }
 ```
 
+Set `cstruct.StrictMode(false|true)` to enable or disable case sensitive during field comparision.

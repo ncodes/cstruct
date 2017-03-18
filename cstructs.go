@@ -2,6 +2,15 @@ package cstructs
 
 import "github.com/fatih/structs"
 import "fmt"
+import "strings"
+
+var strictMode = true
+
+// SetStrictMode enables case sensitive field comparison while false
+// disables case sensitivity.
+func SetStrictMode(s bool) {
+	strictMode = s
+}
 
 // Copy copies the value of fields from src to similar
 // fields of dest
@@ -20,8 +29,14 @@ func Copy(src interface{}, dest interface{}) error {
 
 	for _, srcField := range _srcFields {
 		for _, destField := range _destFields {
-			if srcField.Name() == destField.Name() && srcField.Kind().String() == destField.Kind().String() {
-				destField.Set(srcField.Value())
+			if strictMode {
+				if srcField.Name() == destField.Name() && srcField.Kind().String() == destField.Kind().String() {
+					destField.Set(srcField.Value())
+				}
+			} else {
+				if strings.ToLower(srcField.Name()) == strings.ToLower(destField.Name()) && strings.ToLower(srcField.Kind().String()) == strings.ToLower(destField.Kind().String()) {
+					destField.Set(srcField.Value())
+				}
 			}
 		}
 	}
