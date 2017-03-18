@@ -1,0 +1,6 @@
+hash: fc3ab5a894dda43083b204e2cbb4ee173de8fdac5c9b0b88879f5a667a5ecc22
+updated: 2017-03-18T17:29:07.795663778+01:00
+imports:
+- name: github.com/fatih/structs
+  version: a720dfa8df582c51dee1b36feabb906bde1588bd
+testImports: []
