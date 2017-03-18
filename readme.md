@@ -5,7 +5,7 @@ and types. This is helpful for when there is need to copy a struct you have no c
 
 #### Installation
 ```
-go install github.com/ncodes/cstruct
+go get github.com/ncodes/cstruct
 ```
 
 #### Example
