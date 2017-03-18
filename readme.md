@@ -1,7 +1,7 @@
 ### CStruct 
 
-This small package helps to copy values from a source struct to another struct with similar fields
-and types. This is helpful for when there is need to copy a struct you have no control over. 
+CStruct allow you to copy from a source struct to another struct with similar fields
+and types. It makes use of the `reflect` package. 
 
 #### Installation
 ```
@@ -42,4 +42,4 @@ func main(){
 }
 ```
 
-Set `cstruct.StrictMode(false|true)` to enable or disable case sensitive during field comparision.
+Set `cstruct.StrictMode(false|true)` to enable or disable case sensitivity during field comparision.
