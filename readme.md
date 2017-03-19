@@ -42,4 +42,15 @@ func main(){
 }
 ```
 
-Set `cstruct.StrictMode(false|true)` to enable or disable case sensitivity during field comparision.
+#### StrictMode(true|false) (Default: true)
+
+Enable  or disable case sensitivity during field comparision. If turned off, fields are normalized to 
+lowercase before comparing with another.
+
+#### CopySlice(src interface{}, dest interface{})
+
+Copies a slice of struct to another slice of struct. Both slice must have the same length.If src is empty, `nil` is returned.
+
+#### MakeSliceOf(of interface{}, size int)
+
+A convenience method for creating a slice of an initialized type. Useful when there is need to create a slice of struct to use as destination when calling `CopySlice`.

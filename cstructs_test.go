@@ -100,3 +100,83 @@ func TestCStruct4StrictModeEnabled(t *testing.T) {
 	assert.NotEqual(t, ben.Age, pete.AGe)
 	assert.Equal(t, ben.About, pete.About)
 }
+
+func TestIsSlice(t *testing.T) {
+	assert.Equal(t, IsSlice([]string{}), true)
+	assert.Equal(t, IsSlice("abc"), false)
+}
+
+func TestMakeSliceOf(t *testing.T) {
+	assert.Equal(t, len(MakeSliceOf(A{}, 3)), 3)
+	assert.Equal(t, len(MakeSliceOf(A{}, 4)), 4)
+}
+
+func TestCStructCopySliceSrcTypeErr(t *testing.T) {
+	SetStrictMode(false)
+	var sliceA = "aa"
+	var sliceB = []*A{}
+	expected := CopySlice(sliceA, sliceB)
+	assert.Equal(t, expected.Error(), "src is not a slice")
+}
+
+func TestCStructCopySliceDestTypeErr(t *testing.T) {
+	SetStrictMode(false)
+	var sliceA = []*A{}
+	var sliceB = "aa"
+	expected := CopySlice(sliceA, sliceB)
+	assert.Equal(t, expected.Error(), "dest is not a slice")
+}
+
+func TestCStructCopySliceUnequalLengthErr(t *testing.T) {
+	SetStrictMode(false)
+	var sliceA = []*A{&A{Name: "ben"}}
+	var sliceB = []*A{}
+	expected := CopySlice(sliceA, sliceB)
+	assert.Equal(t, expected.Error(), "src and dest length are not equal")
+}
+
+func TestCStructCopySliceNilIfSrcIsEmpty(t *testing.T) {
+	SetStrictMode(false)
+	var sliceA = []*A{}
+	var sliceB = []*A{&A{Name: "ben"}}
+	expected := CopySlice(sliceA, sliceB)
+	assert.Nil(t, expected)
+}
+
+func TestCStructCopySliceNonStructInSrc(t *testing.T) {
+	SetStrictMode(false)
+	var sliceA = []string{"abc"}
+	var sliceB = []*A{&A{Name: "ben"}}
+	expected := CopySlice(sliceA, sliceB)
+	assert.Equal(t, expected.Error(), "found a non struct value in src. expects a slice of structs")
+}
+
+func TestCStructCopySliceNonStructInDest(t *testing.T) {
+	SetStrictMode(false)
+	var sliceA = []*A{&A{Name: "ben"}}
+	var sliceB = []string{"abc"}
+	expected := CopySlice(sliceA, sliceB)
+	assert.Equal(t, expected.Error(), "found a non struct value in dest. expects a slice of structs")
+}
+
+func TestCStructCopySliceSuccess(t *testing.T) {
+	SetStrictMode(false)
+	var sliceA = []*A{&A{Name: "ben", Age: 12, About: []byte("cool person")}}
+	var sliceB = []*A{&A{}}
+	expected := CopySlice(sliceA, sliceB)
+	assert.Nil(t, expected)
+	assert.Equal(t, sliceA[0].Name, sliceB[0].Name)
+	assert.Equal(t, sliceA[0].Age, sliceB[0].Age)
+	assert.Equal(t, sliceA[0].About, sliceB[0].About)
+}
+
+func TestCStructCopySliceSuccess2(t *testing.T) {
+	SetStrictMode(false)
+	var sliceA = []*A{&A{Name: "ben", Age: 12, About: []byte("cool person")}}
+	var sliceB = MakeSliceOf(A{}, 1)
+	expected := CopySlice(sliceA, sliceB)
+	assert.Nil(t, expected)
+	assert.Equal(t, sliceA[0].Name, sliceB[0].(*A).Name)
+	assert.Equal(t, sliceA[0].Age, sliceB[0].(*A).Age)
+	assert.Equal(t, sliceA[0].About, sliceB[0].(*A).About)
+}
