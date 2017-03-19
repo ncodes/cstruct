@@ -1,11 +1,11 @@
 ### CStruct 
 
-CStruct allow you to copy from a source struct to another struct with similar fields
-and types. It makes use of the `reflect` package. 
+CStruct copies a source struct to another struct that share similar fields
+and field types.  
 
 #### Installation
 ```
-go get github.com/ncodes/cstruct
+go get github.com/ncodes/cstructs
 ```
 
 #### Example
@@ -13,7 +13,7 @@ go get github.com/ncodes/cstruct
 ```go
 package main
 
-import "github.com/ncodes/cstruct"
+import "github.com/ncodes/cstructs"
 
 // A
 type A struct {
@@ -38,7 +38,7 @@ func main(){
 	}
 
     var pete B
-    Copy(&ben, &pete)
+    cstructs.Copy(&ben, &pete)
 }
 ```
 
