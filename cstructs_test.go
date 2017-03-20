@@ -97,7 +97,8 @@ func TestCStruct3InnerStruct(t *testing.T) {
 	var brad F
 	err := Copy(&ben, &brad)
 	assert.Nil(t, err)
-	util.Printify(brad)
+	assert.Equal(t, brad.BestFriend.Name, "jon")
+	assert.Equal(t, brad.BestFriend.Age, 19)
 }
 
 func BenchmarkCStruct3InnerStruct(b *testing.B) {
