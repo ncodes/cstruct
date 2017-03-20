@@ -208,3 +208,14 @@ func TestCStructCopySliceSuccess2(t *testing.T) {
 	assert.Equal(t, sliceA[0].Age, sliceB[0].(*A).Age)
 	assert.Equal(t, sliceA[0].About, sliceB[0].(*A).About)
 }
+
+func TestAAA(t *testing.T) {
+	var a = F{
+		Name:       "ken",
+		Age:        15,
+		About:      []byte("coder"),
+		BestFriend: &A{Name: "pete"},
+	}
+	var b E
+	Copy(a, &b)
+}

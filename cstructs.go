@@ -5,7 +5,7 @@ import (
 	"reflect"
 
 	"github.com/fatih/structs"
-	"github.com/mitchellh/mapstructure"
+	"github.com/ncodes/mapstructure"
 )
 
 // Copy copies the value of fields from src to similar

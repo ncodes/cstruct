@@ -1,10 +1,10 @@
-hash: 3170e50adda3fde6a60395cdb3005146d2f4372758d23d0a28e04ba0d45a26a2
-updated: 2017-03-20T08:37:48.863005976+01:00
+hash: e08a770d1a223d1ed8e3c0e723aac88e6e1061ee02a6068924b7c5ffe1ad38ad
+updated: 2017-03-20T10:07:54.909316067+01:00
 imports:
 - name: github.com/fatih/structs
   version: a720dfa8df582c51dee1b36feabb906bde1588bd
-- name: github.com/mitchellh/mapstructure
-  version: 53818660ed4955e899c0bcafa97299a388bd7c8e
+- name: github.com/ncodes/mapstructure
+  version: c7b2f614d5cd8bd739a2271d2c548a1026259c4b
 testImports:
 - name: github.com/cbroglie/mustache
   version: 6857e4b493bdb8d4b1931446eb41704aeb4c28cb
