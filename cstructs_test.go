@@ -3,6 +3,7 @@ package cstructs
 import (
 	"testing"
 
+	"github.com/ellcrys/util"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -36,8 +37,21 @@ type D struct {
 	Gender string
 }
 
+type E struct {
+	Name       string
+	Age        int
+	About      []byte
+	BestFriend *C
+}
+
+type F struct {
+	Name       string
+	Age        int
+	About      []byte
+	BestFriend *A
+}
+
 func TestCStruct1(t *testing.T) {
-	SetStrictMode(true)
 	ben := A{
 		Name:  "benedith",
 		Age:   20,
@@ -53,7 +67,6 @@ func TestCStruct1(t *testing.T) {
 }
 
 func TestCStruct2(t *testing.T) {
-	SetStrictMode(true)
 	ben := A{
 		Name:  "benedith",
 		Age:   20,
@@ -69,36 +82,58 @@ func TestCStruct2(t *testing.T) {
 	assert.Empty(t, pete.Gender)
 }
 
-func TestCStruct3StrictModeDisabled(t *testing.T) {
-	SetStrictMode(false)
-	ben := A{
+func TestCStruct3InnerStruct(t *testing.T) {
+	ben := E{
 		Name:  "benedith",
 		Age:   20,
 		About: []byte("Ben is a great sports person"),
+		BestFriend: &C{
+			Name:   "jon",
+			Age:    19,
+			About:  []byte("king of the north"),
+			Gender: "male",
+		},
 	}
-
-	var pete D
-	Copy(&ben, &pete)
-
-	assert.Equal(t, ben.Name, pete.NaMe)
-	assert.Equal(t, ben.Age, pete.AGe)
-	assert.Equal(t, ben.About, pete.About)
+	var brad F
+	err := Copy(&ben, &brad)
+	assert.Nil(t, err)
+	util.Printify(brad)
 }
 
-func TestCStruct4StrictModeEnabled(t *testing.T) {
-	SetStrictMode(true)
-	ben := A{
+func BenchmarkCStruct3InnerStruct(b *testing.B) {
+	ben := E{
 		Name:  "benedith",
 		Age:   20,
 		About: []byte("Ben is a great sports person"),
+		BestFriend: &C{
+			Name:   "jon",
+			Age:    19,
+			About:  []byte("king of the north"),
+			Gender: "male",
+		},
 	}
+	var brad F
+	err := Copy(&ben, &brad)
+	assert.Nil(b, err)
+}
 
-	var pete D
-	Copy(&ben, &pete)
-
-	assert.NotEqual(t, ben.Name, pete.NaMe)
-	assert.NotEqual(t, ben.Age, pete.AGe)
-	assert.Equal(t, ben.About, pete.About)
+func BenchmarkCStruct3InnerStructWithJSON(b *testing.B) {
+	ben := E{
+		Name:  "benedith",
+		Age:   20,
+		About: []byte("Ben is a great sports person"),
+		BestFriend: &C{
+			Name:   "jon",
+			Age:    19,
+			About:  []byte("king of the north"),
+			Gender: "male",
+		},
+	}
+	var brad F
+	json, err := util.ToJSON(ben)
+	assert.Nil(b, err)
+	err = util.FromJSON(json, &brad)
+	assert.Nil(b, err)
 }
 
 func TestIsSlice(t *testing.T) {
@@ -112,7 +147,6 @@ func TestMakeSliceOf(t *testing.T) {
 }
 
 func TestCStructCopySliceSrcTypeErr(t *testing.T) {
-	SetStrictMode(false)
 	var sliceA = "aa"
 	var sliceB = []*A{}
 	expected := CopySlice(sliceA, sliceB)
@@ -120,7 +154,6 @@ func TestCStructCopySliceSrcTypeErr(t *testing.T) {
 }
 
 func TestCStructCopySliceDestTypeErr(t *testing.T) {
-	SetStrictMode(false)
 	var sliceA = []*A{}
 	var sliceB = "aa"
 	expected := CopySlice(sliceA, sliceB)
@@ -128,7 +161,6 @@ func TestCStructCopySliceDestTypeErr(t *testing.T) {
 }
 
 func TestCStructCopySliceUnequalLengthErr(t *testing.T) {
-	SetStrictMode(false)
 	var sliceA = []*A{&A{Name: "ben"}}
 	var sliceB = []*A{}
 	expected := CopySlice(sliceA, sliceB)
@@ -136,7 +168,6 @@ func TestCStructCopySliceUnequalLengthErr(t *testing.T) {
 }
 
 func TestCStructCopySliceNilIfSrcIsEmpty(t *testing.T) {
-	SetStrictMode(false)
 	var sliceA = []*A{}
 	var sliceB = []*A{&A{Name: "ben"}}
 	expected := CopySlice(sliceA, sliceB)
@@ -144,7 +175,6 @@ func TestCStructCopySliceNilIfSrcIsEmpty(t *testing.T) {
 }
 
 func TestCStructCopySliceNonStructInSrc(t *testing.T) {
-	SetStrictMode(false)
 	var sliceA = []string{"abc"}
 	var sliceB = []*A{&A{Name: "ben"}}
 	expected := CopySlice(sliceA, sliceB)
@@ -152,7 +182,6 @@ func TestCStructCopySliceNonStructInSrc(t *testing.T) {
 }
 
 func TestCStructCopySliceNonStructInDest(t *testing.T) {
-	SetStrictMode(false)
 	var sliceA = []*A{&A{Name: "ben"}}
 	var sliceB = []string{"abc"}
 	expected := CopySlice(sliceA, sliceB)
@@ -160,7 +189,6 @@ func TestCStructCopySliceNonStructInDest(t *testing.T) {
 }
 
 func TestCStructCopySliceSuccess(t *testing.T) {
-	SetStrictMode(false)
 	var sliceA = []*A{&A{Name: "ben", Age: 12, About: []byte("cool person")}}
 	var sliceB = []*A{&A{}}
 	expected := CopySlice(sliceA, sliceB)
@@ -171,7 +199,6 @@ func TestCStructCopySliceSuccess(t *testing.T) {
 }
 
 func TestCStructCopySliceSuccess2(t *testing.T) {
-	SetStrictMode(false)
 	var sliceA = []*A{&A{Name: "ben", Age: 12, About: []byte("cool person")}}
 	var sliceB = MakeSliceOf(A{}, 1)
 	expected := CopySlice(sliceA, sliceB)

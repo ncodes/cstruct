@@ -1,17 +1,12 @@
 package cstructs
 
-import "github.com/fatih/structs"
-import "fmt"
-import "strings"
-import "reflect"
+import (
+	"fmt"
+	"reflect"
 
-var strictMode = true
-
-// SetStrictMode enables case sensitive field comparison while false
-// disables case sensitivity.
-func SetStrictMode(s bool) {
-	strictMode = s
-}
+	"github.com/fatih/structs"
+	"github.com/mitchellh/mapstructure"
+)
 
 // Copy copies the value of fields from src to similar
 // fields of dest
@@ -24,25 +19,8 @@ func Copy(src interface{}, dest interface{}) error {
 	}
 
 	_src := structs.New(src)
-	_dest := structs.New(dest)
-	_srcFields := _src.Fields()
-	_destFields := _dest.Fields()
-
-	for _, srcField := range _srcFields {
-		for _, destField := range _destFields {
-			if strictMode {
-				if srcField.Name() == destField.Name() && srcField.Kind().String() == destField.Kind().String() {
-					destField.Set(srcField.Value())
-				}
-			} else {
-				if strings.ToLower(srcField.Name()) == strings.ToLower(destField.Name()) && strings.ToLower(srcField.Kind().String()) == strings.ToLower(destField.Kind().String()) {
-					destField.Set(srcField.Value())
-				}
-			}
-		}
-	}
-
-	return nil
+	_srcAsMap := _src.Map()
+	return mapstructure.Decode(_srcAsMap, dest)
 }
 
 // IsSlice checks if an interface holds a slice.

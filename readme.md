@@ -42,11 +42,6 @@ func main(){
 }
 ```
 
-#### StrictMode(true|false) (Default: true)
-
-Enable  or disable case sensitivity during field comparision. If turned off, fields are normalized to 
-lowercase before comparing with another.
-
 #### CopySlice(src interface{}, dest interface{})
 
 Copies a slice of struct to another slice of struct. Both slice must have the same length.If src is empty, `nil` is returned.
